@@ -3,9 +3,16 @@ nest_asyncio.apply()
 
 import pydra
 import attr
+import re
 
 cmd = "echo"
 args = ["newfile_1.txt", "newfile_2.txt"]
+
+def get_file_index(stdout):
+    stdout = re.sub(r'.*_', "", stdout)
+    stdout = re.sub(r'.txt', "", stdout)
+    print(stdout)
+    return int(stdout)
 
 my_output_spec = pydra.specs.SpecInfo(
     name="Output",
@@ -21,12 +28,12 @@ my_output_spec = pydra.specs.SpecInfo(
             ),
         ),
         (
-            "out_len",
+            "out_file_index",
             attr.ib(
-                type=pydra.specs.Int,
+                type=int,
                 metadata={
                     "help_string": "output file",
-                    "value": "3",
+                    "callable": get_file_index,
                 },
             ),    
         )
@@ -41,4 +48,7 @@ print("cmndline = ", shelly.cmdline)
 
 with pydra.Submitter(plugin="cf") as sub:
     sub(shelly)
-shelly.result()
+print(shelly.result())
+#results = shelly.result()
+#for result in results:
+#    print(result.output.stdout)
