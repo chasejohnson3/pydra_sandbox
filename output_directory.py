@@ -12,7 +12,7 @@ my_input_spec = pydra.specs.SpecInfo(
                 "outputFile",
                 attr.ib(
                     type=pydra.specs.Directory,
-                    metadata={"help_string": "The name of a file to be created.", "mandatory": True},
+                    metadata={"help_string": "The name of a file to be created."},
                 ),
             )
         ],
@@ -39,7 +39,7 @@ my_output_spec = pydra.specs.SpecInfo(
 
 
 shelly = pydra.ShellCommandTask(name="shelly", executable=cmd, input_spec=my_input_spec, output_spec=my_output_spec)
-shelly.inputs.outputFile = "out_file.txt"
+shelly.inputs.outputFile = "{shelly.inputs.outputFile}/out_file.txt"
 
 print("cmndline = ", shelly.cmdline)
 
